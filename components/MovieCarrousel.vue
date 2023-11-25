@@ -2,7 +2,7 @@
     <div class="movie-carrousel-header" v-if="title">
         {{ title }}
     </div>
-    <div class="movie-carrousel-container">
+    <div :class="carrouselClass">
         <div class="movie-carrousel" :id="`movie-carrousel-${title}`">
             <div class="movie-card-container" v-for="movie in movies">
                 <MovieCard :movie="movie" />
@@ -34,49 +34,69 @@ if (props.apiEndpoint){
     }
 }
 
-</script>
+let showFadeLeft = ref(false);
+let showFadeRight = ref(true);
 
-<script lang="ts">
-export default {
-    methods: {
-        mouseIsDown(e: MouseEvent, isDown: Ref<Boolean>, prevX: Ref<number>) {
-            isDown.value = true;
-            prevX.value = e.x;
-        },
-        mouseUp(isDown: Ref<Boolean>) {
-            isDown.value = false;
-        },
-        mouseLeave(isDown: Ref<Boolean>) {
-            isDown.value = false;
-        },
-        mouseMove(e: MouseEvent, isDown: Ref<Boolean>, prevX: Ref<number>, carrousel: HTMLElement) {
-            if (isDown.value) {
-                let scrollOffset = prevX.value - e.x;
-                carrousel.scroll(carrousel.scrollLeft + scrollOffset, 0);
-                prevX.value = e.x;
-            }
-        }
-    },
-    mounted () {
-        let isDown = ref(false);
-        let prevX = ref(0);
-        const carrousel = document.getElementById(`movie-carrousel-${this.title}`);
+const carrouselClass = computed(() => `movie-carrousel-container ${showFadeLeft.value ? 'fade-left' : ''} ${showFadeRight.value ? 'fade-right' : ''}`);
 
-        if (carrousel == null) {
-            return;
-        }
+onMounted(() => {
+    const carrousel = document.getElementById(`movie-carrousel-${props.title}`);
 
-        carrousel.addEventListener("mousedown", (e) => this.mouseIsDown(e, isDown, prevX));
-        carrousel.addEventListener("mouseup", (e) => this.mouseUp(isDown));
-        carrousel.addEventListener("mouseleave", (e) => this.mouseLeave(isDown));
-        carrousel.addEventListener("mousemove", (e) => this.mouseMove(e, isDown, prevX, carrousel));
+    if (carrousel == null) {
+        return;
+    }
+    
+    let isDown = ref(false);
+    let prevX = ref(0);
+
+    carrousel.addEventListener("mousedown", (e) => mouseIsDown(e, isDown, prevX));
+    carrousel.addEventListener("mouseup", () => mouseUp(isDown));
+    carrousel.addEventListener("mouseleave", () => mouseLeave(isDown));
+    carrousel.addEventListener("mousemove", (e) => mouseMove(e, isDown, prevX, carrousel));
+    carrousel.addEventListener("scroll", () => checkScrollPosition(carrousel));
+});
+
+const mouseIsDown = (e: MouseEvent, isDown: Ref<Boolean>, prevX: Ref<number>) => {
+    isDown.value = true;
+    prevX.value = e.x;
+}
+
+const mouseUp = (isDown: Ref<Boolean>) => {
+    isDown.value = false;
+}
+
+const mouseLeave = (isDown: Ref<Boolean>) => {
+    isDown.value = false;
+}
+
+const mouseMove = (e: MouseEvent, isDown: Ref<Boolean>, prevX: Ref<number>, carrousel: HTMLElement) => {
+    if (isDown.value) {
+        let scrollOffset = prevX.value - e.x;
+        carrousel.scroll(carrousel.scrollLeft + scrollOffset, 0);
+        prevX.value = e.x;
+
+        checkScrollPosition(carrousel);
+    }
+}
+
+const checkScrollPosition = (carrousel: HTMLElement) => {
+    if (!showFadeLeft.value && carrousel.scrollLeft > 0) {
+        showFadeLeft.value = true;
+    } else if (showFadeLeft.value && carrousel.scrollLeft == 0) {
+        showFadeLeft.value = false;
+    }
+
+    if (showFadeRight.value && carrousel.scrollLeft == carrousel.scrollWidth - carrousel.clientWidth) {
+        showFadeRight.value = false;
+    } else if (!showFadeRight.value && carrousel.scrollLeft < carrousel.scrollWidth - carrousel.clientWidth) {
+        showFadeRight.value = true;
     }
 }
 </script>
 
 <style scoped>
 .movie-carrousel-header {
-    margin-left: calc(var(--carrousel-fade-width) / 1.5);
+    margin-left: var(--movie-carrousel-x-margin);
     margin-bottom: 0.5rem;
     font-size: 1.6rem;
 }
@@ -89,25 +109,35 @@ export default {
 .movie-carrousel-container::before {
     content: '';
     height: 100%;
-    width: var(--carrousel-fade-width);
+    width: calc(var(--movie-carrousel-x-margin) * 2.5);
     position: absolute;
     top: 0;
     left: 0;
-    background-image: linear-gradient(to right, var(--background-color) 30%, transparent);
+    background-image: linear-gradient(to right, var(--background-color) 40%, transparent);
     z-index: 1;
     pointer-events: none;
+    opacity: 0;
 }
 
 .movie-carrousel-container::after {
     content: '';
     height: 100%;
-    width: var(--carrousel-fade-width);
+    width: calc(var(--movie-carrousel-x-margin) * 2.5);
     position: absolute;
     top: 0;
     right: 0;
-    background-image: linear-gradient(to left, var(--background-color) 30%, transparent);
+    background-image: linear-gradient(to left, var(--background-color) 40%, transparent);
     z-index: 1;
     pointer-events: none;
+    opacity: 0;
+}
+
+.movie-carrousel-container.fade-left::before {
+    opacity: 1;
+}
+
+.movie-carrousel-container.fade-right::after {
+    opacity: 1;
 }
 
 .movie-carrousel {
@@ -122,10 +152,10 @@ export default {
 }
 
 .movie-card-container:first-child {
-    margin-left: calc(var(--carrousel-fade-width) / 2);
+    margin-left: var(--movie-carrousel-x-margin);
 }
 
 .movie-card-container:last-child {
-    margin-right: calc(var(--carrousel-fade-width) / 2);
+    margin-right: var(--movie-carrousel-x-margin);
 }
 </style>

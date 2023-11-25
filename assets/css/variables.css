@@ -6,7 +6,7 @@
     --theme-color-secondary: turquoise;
 
     /* SIZES */
-    --carrousel-fade-width: 120px;
+    --movie-carrousel-x-margin: 60px;
     --movie-card-width: 225px;
     --movie-card-margin: 4px 8px;
 }
