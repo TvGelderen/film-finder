@@ -1,0 +1,26 @@
+@media screen and (max-width: 1300px) {
+    :root {
+        --carrousel-fade-width: 80px;
+        --movie-card-width: 190px;
+    }    
+}
+
+@media screen and (max-width: 900px) {
+    :root {
+        font-size: 14px;
+
+        --carrousel-fade-width: 60px;
+        --movie-card-width: 140px;
+        --movie-card-margin: 3px 6px;
+    }
+}
+
+@media screen and (max-width: 600px) {
+    :root {
+        font-size: 12px;
+        
+        --carrousel-fade-width: 30px;
+        --movie-card-width: 100px;
+        --movie-card-margin: 2px 4px;
+    }
+}

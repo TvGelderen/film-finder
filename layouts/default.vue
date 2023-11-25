@@ -1,6 +1,8 @@
 <template>
     <nav>
-        <NuxtLink class="nav-link" to="/">Home</NuxtLink>
+        <div class="title-link">
+            <NuxtLink class="nav-link" to="/">FilmFinder</NuxtLink>
+        </div>
     </nav>
     <main>
         <slot />
@@ -8,27 +10,30 @@
 </template>
 
 <style scoped>
-    nav {
-        width: 100%;
-        height: 60px;
-        padding-left: 24px;
-        display: flex;
-        align-items: center;
-        background-color: #060606;
-    }
+nav {
+    width: 100%;
+    height: 60px;
+    display: flex;
+    align-items: center;
+    background-color: var(--background-color-secondary);
+}
 
-    main {
-        padding: 24px;
-        background-color: #121212;
-        height: calc(100vh - 60px);
-    }
+main {
+    background-color: var(--background-color);
+    height: calc(100vh - 60px);
+    padding-top: 48px;
+}
 
-    .nav-link {
-        font-size: 24px;
-        text-decoration: none;
-    }
+.nav-link {
+    font-size: 24px;
+    text-decoration: none;
+}
 
-    .nav-link:hover {
-        color: #dddddd;
-    }
+.nav-link:hover {
+    color: #dddddd;
+}
+
+.title-link .nav-link {
+    font-family: 'Times New Roman', Times, serif;
+}
 </style>

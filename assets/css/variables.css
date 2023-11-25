@@ -1,0 +1,12 @@
+:root {
+    /* COLORS */
+    --background-color: #121212;
+    --background-color-secondary: #252525;
+    --theme-color: blue;
+    --theme-color-secondary: turquoise;
+
+    /* SIZES */
+    --carrousel-fade-width: 120px;
+    --movie-card-width: 225px;
+    --movie-card-margin: 4px 8px;
+}

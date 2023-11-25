@@ -1,12 +1,5 @@
 <template>
-    <MovieCarrousel :movies="data?.results" />
+    <MovieCarrousel title="Trending" apiEndpoint="/api/movies/trending" />
+    <MovieCarrousel title="Popular" apiEndpoint="/api/movies/popular" />
+    <MovieCarrousel title="Top Rated" apiEndpoint="/api/movies/top-rated" />
 </template>
-
-<script setup lang="ts">
-    import type { MovieResponse } from '../types/movie-db/MovieResponse';
-
-    const { data } = await useFetch<MovieResponse>('/api/movies/trending');
-</script>
-
-<style>
-</style>

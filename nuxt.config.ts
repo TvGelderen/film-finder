@@ -7,5 +7,10 @@ export default defineNuxtConfig({
       MOVIE_DB_IMG_URL_THUMBNAIL: process.env.NUXT_MOVIE_DB_IMG_URL_THUMBNAIL
     }
   },
+  modules: ['nuxt-icon'],
+  css: [
+    '@/assets/css/variables.css',
+    '@/assets/css/media.css',
+  ],
   devtools: { enabled: true }
 })

@@ -5,10 +5,10 @@
 </template>
 
 <style>
-  * {
-    padding: 0;
-    margin: 0;
-    color: white;
-    font-family: Arial, Helvetica, sans-serif;
-  }
+* {
+  padding: 0;
+  margin: 0;
+  color: white;
+  font-family: Arial, Helvetica, sans-serif;
+}
 </style>
