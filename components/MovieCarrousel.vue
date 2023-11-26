@@ -3,7 +3,7 @@
         {{ title }}
     </div>
     <div :class="carrouselClass">
-        <div class="movie-carrousel" :id="`movie-carrousel-${title}`">
+        <div class="movie-carrousel" ref="carrousel">
             <div class="movie-card-container" v-for="movie in movies">
                 <MovieCard :movie="movie" />
             </div>
@@ -34,26 +34,25 @@ if (props.apiEndpoint){
     }
 }
 
-let showFadeLeft = ref(false);
-let showFadeRight = ref(true);
+const showFadeLeft = ref(false);
+const showFadeRight = ref(true);
+const carrousel: Ref<HTMLElement | null> = ref(null);
 
 const carrouselClass = computed(() => `movie-carrousel-container ${showFadeLeft.value ? 'fade-left' : ''} ${showFadeRight.value ? 'fade-right' : ''}`);
 
 onMounted(() => {
-    const carrousel = document.getElementById(`movie-carrousel-${props.title}`);
-
-    if (carrousel == null) {
+    if (carrousel.value == null) {
         return;
     }
     
     let isDown = ref(false);
     let prevX = ref(0);
 
-    carrousel.addEventListener("mousedown", (e) => mouseIsDown(e, isDown, prevX));
-    carrousel.addEventListener("mouseup", () => mouseUp(isDown));
-    carrousel.addEventListener("mouseleave", () => mouseLeave(isDown));
-    carrousel.addEventListener("mousemove", (e) => mouseMove(e, isDown, prevX, carrousel));
-    carrousel.addEventListener("scroll", () => checkScrollPosition(carrousel));
+    carrousel.value.addEventListener("mousedown", (e) => mouseIsDown(e, isDown, prevX));
+    carrousel.value.addEventListener("mouseup", () => mouseUp(isDown));
+    carrousel.value.addEventListener("mouseleave", () => mouseLeave(isDown));
+    carrousel.value.addEventListener("mousemove", (e) => mouseMove(e, isDown, prevX, carrousel.value));
+    carrousel.value.addEventListener("scroll", () => updateFadeAfterScroll(carrousel.value));
 });
 
 const mouseIsDown = (e: MouseEvent, isDown: Ref<Boolean>, prevX: Ref<number>) => {
@@ -69,17 +68,19 @@ const mouseLeave = (isDown: Ref<Boolean>) => {
     isDown.value = false;
 }
 
-const mouseMove = (e: MouseEvent, isDown: Ref<Boolean>, prevX: Ref<number>, carrousel: HTMLElement) => {
-    if (isDown.value) {
+const mouseMove = (e: MouseEvent, isDown: Ref<Boolean>, prevX: Ref<number>, carrousel: HTMLElement | null) => {
+    if (isDown.value && carrousel != null) {
         let scrollOffset = prevX.value - e.x;
         carrousel.scroll(carrousel.scrollLeft + scrollOffset, 0);
         prevX.value = e.x;
 
-        checkScrollPosition(carrousel);
+        updateFadeAfterScroll(carrousel);
     }
 }
 
-const checkScrollPosition = (carrousel: HTMLElement) => {
+const updateFadeAfterScroll = (carrousel: HTMLElement | null) => {
+    if (carrousel == null) return;
+
     if (!showFadeLeft.value && carrousel.scrollLeft > 0) {
         showFadeLeft.value = true;
     } else if (showFadeLeft.value && carrousel.scrollLeft == 0) {
@@ -106,30 +107,26 @@ const checkScrollPosition = (carrousel: HTMLElement) => {
     width: 100%;
 }
 
-.movie-carrousel-container::before {
-    content: '';
-    height: 100%;
-    width: calc(var(--movie-carrousel-x-margin) * 2.5);
-    position: absolute;
-    top: 0;
-    left: 0;
-    background-image: linear-gradient(to right, var(--background-color) 40%, transparent);
-    z-index: 1;
-    pointer-events: none;
-    opacity: 0;
-}
-
+.movie-carrousel-container::before,
 .movie-carrousel-container::after {
     content: '';
     height: 100%;
     width: calc(var(--movie-carrousel-x-margin) * 2.5);
     position: absolute;
     top: 0;
-    right: 0;
-    background-image: linear-gradient(to left, var(--background-color) 40%, transparent);
-    z-index: 1;
     pointer-events: none;
     opacity: 0;
+    z-index: 1;
+}
+
+.movie-carrousel-container::before {
+    left: 0;
+    background-image: linear-gradient(to right, var(--background-color) 40%, transparent);
+}
+
+.movie-carrousel-container::after {
+    right: 0;
+    background-image: linear-gradient(to left, var(--background-color) 40%, transparent);
 }
 
 .movie-carrousel-container.fade-left::before {
@@ -142,7 +139,7 @@ const checkScrollPosition = (carrousel: HTMLElement) => {
 
 .movie-carrousel {
     display: flex;
-    margin: 0 auto;
+    gap: var(--movie-card-gap);
     overflow-x: auto;
     scrollbar-width: none;
 }

@@ -11,7 +11,7 @@
 
         --movie-carrousel-x-margin: 20px;
         --movie-card-width: 140px;
-        --movie-card-margin: 3px 6px;
+        --movie-card-gap: 12px;
     }
 }
 
@@ -21,6 +21,6 @@
         
         --movie-carrousel-x-margin: 10px;
         --movie-card-width: 100px;
-        --movie-card-margin: 2px 4px;
+        --movie-card-gap: 8px;
     }
 }

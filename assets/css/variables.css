@@ -8,5 +8,5 @@
     /* SIZES */
     --movie-carrousel-x-margin: 60px;
     --movie-card-width: 225px;
-    --movie-card-margin: 4px 8px;
+    --movie-card-gap: 16px;
 }

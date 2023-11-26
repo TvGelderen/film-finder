@@ -49,7 +49,6 @@ const likeMovie = () => {
     aspect-ratio: 300/450;
     cursor: pointer;
     user-select: none;
-    margin: var(--movie-card-margin);
 }
 
 .movie-card:hover .movie-info-container {
