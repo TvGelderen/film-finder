@@ -104,7 +104,7 @@ const updateFadeAfterScroll = (carrousel: HTMLElement | null) => {
 
 .movie-carrousel-container {
     position: relative;
-    width: 100%;
+    padding: 0 var(--movie-carrousel-x-margin);
 }
 
 .movie-carrousel-container::before,
@@ -115,8 +115,8 @@ const updateFadeAfterScroll = (carrousel: HTMLElement | null) => {
     position: absolute;
     top: 0;
     pointer-events: none;
-    opacity: 0;
     z-index: 1;
+    opacity: 0;
 }
 
 .movie-carrousel-container::before {
@@ -148,11 +148,11 @@ const updateFadeAfterScroll = (carrousel: HTMLElement | null) => {
     display: none;
 }
 
-.movie-card-container:first-child {
+/* .movie-card-container:first-child {
     margin-left: var(--movie-carrousel-x-margin);
 }
 
 .movie-card-container:last-child {
     margin-right: var(--movie-carrousel-x-margin);
-}
+} */
 </style>
