@@ -1,10 +1,5 @@
-export default defineEventHandler(() => {
-    const config = useRuntimeConfig();
+import { useMovieDbFetch } from "~/composables/useMovieDbFetch";
 
-    return $fetch(`${config.public.MOVIE_DB_BASE_URL}/movie/popular?language=en-US&page=1`, {
-        method: 'GET',
-        headers: {
-            "Authorization": `Bearer ${config.public.MOVIE_DB_ACCESS_TOKEN}`
-        }
-    });
+export default defineEventHandler(() => {
+    return useMovieDbFetch('/movie/popular?language=en-US&page=1');
 });
