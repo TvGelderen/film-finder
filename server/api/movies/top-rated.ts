@@ -1,5 +1,5 @@
-import { useMovieDbFetch } from "~/composables/useMovieDbFetch";
+import { fetchFromMovieDB } from "~/utils/fetchFromMovieDB";
 
 export default defineEventHandler(() => {
-    return useMovieDbFetch('/movie/top_rated?language=en-US&page=1');
+    return fetchFromMovieDB('/movie/top_rated?language=en-US&page=1');
 });

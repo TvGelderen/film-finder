@@ -1,4 +1,4 @@
-export const useMovieDbFetch = (endpoint: string) => {
+export const fetchFromMovieDB = (endpoint: string) => {
     const config = useRuntimeConfig();
 
     return $fetch(`${config.public.MOVIE_DB_BASE_URL}${endpoint}`, {

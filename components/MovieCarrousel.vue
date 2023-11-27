@@ -12,8 +12,7 @@
 </template>
 
 <script setup lang="ts">
-import type { Movie } from '~/types/movie-db/Movie';
-import type { MovieResponse } from '../types/movie-db/MovieResponse';
+import type { Movie, MovieResponse  } from '~/types/movie-db/MovieTypes';
 
 const props = defineProps({
     title: {

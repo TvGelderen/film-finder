@@ -2,8 +2,9 @@
     /* COLORS */
     --background-color: #121212;
     --background-color-secondary: #252525;
-    --theme-color: blue;
-    --theme-color-secondary: turquoise;
+    --background-color-tertiary: #323232;
+    --theme-color: rgba(67, 23, 228, 0.774);
+    --theme-color-secondary: rgba(125, 89, 255, 0.774);
 
     /* SIZES */
     --movie-carrousel-x-margin: 60px;
