@@ -36,14 +36,16 @@ if (data.value) {
 
 const showGenreContainer = ref(false);
 
-const toggleShowGenreContainer = (event: MouseEvent) => {
-    event.stopPropagation();
-    
+const toggleShowGenreContainer = () => {    
     showGenreContainer.value = !showGenreContainer.value;
 
-    const handleOutsideClick = (e: MouseEvent) => {
+    function handleOutsideClick(e: MouseEvent) {
         const target = e.target as HTMLElement;
 
+        if (target.className == "genre-option" && showGenreContainer.value == true) {
+            return;
+        }
+        
         if (target.className != "genre-container") {
             showGenreContainer.value = false;
 
@@ -53,8 +55,6 @@ const toggleShowGenreContainer = (event: MouseEvent) => {
 
     if (showGenreContainer.value) {
         document.addEventListener("click", handleOutsideClick);
-    } else {
-        document.removeEventListener("click", handleOutsideClick);
     }
 }
 </script>
