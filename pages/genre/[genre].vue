@@ -136,6 +136,7 @@ onMounted(async () => {
     background-color: var(--theme-color-secondary);
     cursor: pointer;
     text-align: center;
+    user-select: none;
 }
 
 .page-button.disabled {

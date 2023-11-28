@@ -21,8 +21,14 @@ export default defineEventHandler(async (event) => {
     
     const startPage = Math.max(Math.ceil((pageNumber - 1) * countNumber / fetchSizeNumber), 1);
     const startIndex = (pageNumber - 1) * countNumber % fetchSizeNumber;
-    const endPage = startPage + Math.ceil((countNumber - (fetchSizeNumber - startIndex)) / fetchSizeNumber); //Math.floor(pageNumber * countNumber / fetchSizeNumber) + 1;
+    const endPage = startPage + Math.ceil((countNumber - (fetchSizeNumber - startIndex)) / fetchSizeNumber);
     const endIndex = (startIndex + countNumber) % fetchSizeNumber == 0 ? fetchSizeNumber : (startIndex + countNumber) % fetchSizeNumber;
+
+    console.log("startPage", startPage);
+    console.log("endPage", endPage);
+    console.log("startIndex", startIndex);
+    console.log("endIndex", endIndex)
+    console.log('\n')
 
     let response: Movie[] | null = null;
 
@@ -30,7 +36,11 @@ export default defineEventHandler(async (event) => {
         const apiResponse = await fetchFromMovieDB(`/discover/movie?include_adult=false&include_video=false&language=en-US&page=${i}&sort_by=popularity.desc&with_genres=${genre}`) as MovieResponse;
 
         if (response == null) {
-            response = apiResponse.results.slice(startIndex)
+            if (startPage == endPage) {
+                response = apiResponse.results.slice(startIndex, endIndex);
+            } else {                
+                response = apiResponse.results.slice(startIndex);
+            }
         } else {
             if (i == endPage) {
                 response.push(...apiResponse.results.slice(0, endIndex));
