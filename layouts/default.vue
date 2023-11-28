@@ -26,6 +26,10 @@
 <script setup lang="ts">
 import type { GenreResponse, Genre } from '~/types/movie-db/GenreTypes';
 
+useHead({
+  title: 'FilmFinder',
+});
+
 let genres: Genre[];
 
 const { data } = useFetch<GenreResponse>('/api/movies/genres');
@@ -33,7 +37,7 @@ const { data } = useFetch<GenreResponse>('/api/movies/genres');
 if (data.value) {
     genres = data.value.genres;
 }
-
+ 
 const showGenreContainer = ref(false);
 
 const toggleShowGenreContainer = () => {    
@@ -45,7 +49,7 @@ const toggleShowGenreContainer = () => {
         if (target.className == "genre-option" && showGenreContainer.value == true) {
             return;
         }
-        
+
         if (target.className != "genre-container") {
             showGenreContainer.value = false;
 
