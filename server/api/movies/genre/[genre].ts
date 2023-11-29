@@ -3,7 +3,7 @@ import { fetchFromMovieDB } from "~/utils/fetchFromMovieDB";
 
 export default defineEventHandler(async (event) => {
     const genre = getRouterParam(event, 'genre');
-    const { page, fetchSize, count } = getQuery(event);
+    const { page, fetchSize, count, start } = getQuery(event);
 
     if (!page) return;
 
@@ -11,24 +11,19 @@ export default defineEventHandler(async (event) => {
 
     if (pageNumber <= 0) return;
 
-    if (!fetchSize || !count) {
+    if (!fetchSize || !count || !start) {
         const response = await fetchFromMovieDB(`/discover/movie?include_adult=false&include_video=false&language=en-US&page=${page}&sort_by=popularity.desc&with_genres=${genre}`) as MovieResponse;
         return response.results;
     }
 
     const fetchSizeNumber = Number.parseInt(fetchSize.toString());
     const countNumber = Number.parseInt(count.toString());
+    const startNumber = Number.parseInt(start?.toString());
     
-    const startPage = Math.max(Math.ceil((pageNumber - 1) * countNumber / fetchSizeNumber), 1);
-    const startIndex = (pageNumber - 1) * countNumber % fetchSizeNumber;
+    const startIndex = startNumber % fetchSizeNumber;
+    const startPage = Math.max(Math.ceil(startNumber / fetchSizeNumber), 1);
     const endPage = startPage + Math.ceil((countNumber - (fetchSizeNumber - startIndex)) / fetchSizeNumber);
     const endIndex = (startIndex + countNumber) % fetchSizeNumber == 0 ? fetchSizeNumber : (startIndex + countNumber) % fetchSizeNumber;
-
-    console.log("startPage", startPage);
-    console.log("endPage", endPage);
-    console.log("startIndex", startIndex);
-    console.log("endIndex", endIndex)
-    console.log('\n')
 
     let response: Movie[] | null = null;
 

@@ -22,17 +22,22 @@
 
 <script setup lang="ts">
 import type { GenreResponse } from '~/types/movie-db/GenreTypes';
-import type { Movie, MovieResponse } from '~/types/movie-db/MovieTypes';
+import type { Movie } from '~/types/movie-db/MovieTypes';
 
 const route = useRoute();
+
+const numberOfRows = 5;
 
 const page = ref(1);
 const genreId = ref(0);
 const gridRef = ref<HTMLElement | null>(null);
+const gridItemsPerRow = ref(0);
+const firstItemIndex = ref(0);
 const movies = ref<Movie[] | null>(null);
 
 const genre = computed(() => route.params.genre);
 const url = computed(() => `/api/movies/genre/${genreId.value}?page=${page.value}`);
+const itemsOnScreen = computed(() => gridItemsPerRow.value * numberOfRows);
 
 let fetchSize: number;
 
@@ -61,12 +66,14 @@ if (data.value) {
 
 const previousPage = async () => {
     page.value--;
+    firstItemIndex.value -= itemsOnScreen.value;
     scrollToPageTop();
     await fetchPageData();
 }
 
 const nextPage = async () => {
     page.value++;
+    firstItemIndex.value += itemsOnScreen.value;
     scrollToPageTop();
     await fetchPageData();
 };
@@ -78,24 +85,35 @@ const scrollToPageTop = () => {
 
 const fetchPageData = async () => {
     if (gridRef.value != null) {
-        const movieCard = document.querySelector(".movie-grid-item");
+        const gridItem = document.querySelector(".movie-grid-item");
 
-        if (movieCard == null) return;
+        if (gridItem == null) return;
 
-        const itemsPerRow = Math.floor(gridRef.value.clientWidth / movieCard?.clientWidth);
-        const numberOfRows = 5;
+        gridItemsPerRow.value = Math.floor(gridRef.value.clientWidth / gridItem.clientWidth);
 
-        const response = await $fetch(`/api/movies/genre/${genreId.value}?page=${page.value}&fetchSize=${fetchSize}&count=${itemsPerRow * numberOfRows}`) as Movie[];
+        const response = await $fetch(`/api/movies/genre/${genreId.value}?page=${page.value}&fetchSize=${fetchSize}&count=${itemsOnScreen.value}&start=${firstItemIndex.value}`) as Movie[];
+
+        console.log(`/api/movies/genre/${genreId.value}?page=${page.value}&fetchSize=${fetchSize}&count=${itemsOnScreen.value}&start=${firstItemIndex.value}`)
 
         if (response) {
-            console.log(response)
             movies.value = response;
+            console.log(response.length)
         }
     }
 }
 
 onMounted(async () => {
     await fetchPageData();
+
+    window.addEventListener("resize", async () => {
+        const gridItem = document.querySelector(".movie-grid-item");
+
+        if (gridRef.value == null || gridItem == null) return;
+
+        if (Math.floor(gridRef.value.clientWidth / gridItem.clientWidth) != gridItemsPerRow.value) {
+            await fetchPageData();
+        }
+    })
 });
 </script>
 
