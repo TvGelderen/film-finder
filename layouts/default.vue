@@ -76,7 +76,7 @@ const handleSearch = async (event: Event) => {
     await navigateTo({
         path: `/search`,
         query: {
-            searchText: searchText.value
+            searchText: `${searchText.value}`
         }
     });
 }

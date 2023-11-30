@@ -1,18 +1,23 @@
 <template>
-    <div class="movie-grid" ref="gridRef">
-        <div class="movie-grid-item" v-for="movie in movies">
-            <MovieCard :movie="movie" />
+    <div class="grid-container">
+        <div class="header" v-if="title">
+            {{ title }}
         </div>
-    </div>
-    <div class="pagination-container">
-        <div :class="`page-button ${page == 1 ? 'disabled' : ''}`" @click="previousPage">
-            Previous page
+        <div class="movie-grid" ref="gridRef">
+            <div class="movie-grid-item" v-for="movie in movies">
+                <MovieCard :movie="movie" />
+            </div>
         </div>
-        <div class="current-page">
-            Page: {{ page }}
-        </div>
-        <div class="page-button" @click="nextPage">
-            Next page
+        <div class="pagination-container">
+            <div :class="`page-button ${page == 1 ? 'disabled' : ''}`" @click="previousPage">
+                Previous page
+            </div>
+            <div class="current-page">
+                Page: {{ page }}
+            </div>
+            <div class="page-button" @click="nextPage">
+                Next page
+            </div>
         </div>
     </div>
 </template>
@@ -21,6 +26,9 @@
 import type { Movie } from '~/types/movie-db/MovieTypes';
 
 const props = defineProps({
+    title: {
+        type: String
+    },
     baseEndpoint: {
         type: String
     },
@@ -40,7 +48,7 @@ const itemsOnScreen = computed(() => gridItemsPerRow.value * props.numberOfRows)
 
 let fetchSize: number;
 
-const { data } = await useFetch<Movie[]>(`${props.baseEndpoint}?page=${page.value}`);
+const { data } = await useFetch<Movie[]>(`${props.baseEndpoint}page=${page.value}`);
 
 if (data.value) {
     movies.value = data.value;
@@ -74,11 +82,10 @@ const fetchPageData = async () => {
 
         gridItemsPerRow.value = Math.floor(gridRef.value.clientWidth / gridItem.clientWidth);
 
-        const response = await $fetch(`${props.baseEndpoint}?page=${page.value}&fetchSize=${fetchSize}&count=${itemsOnScreen.value}&start=${firstItemIndex.value}`) as Movie[];
+        const response = await $fetch(`${props.baseEndpoint}page=${page.value}&fetchSize=${fetchSize}&count=${itemsOnScreen.value}&start=${firstItemIndex.value}`) as Movie[];
 
         if (response) {
             movies.value = response;
-            console.log(response.length)
         }
     }
 }
@@ -100,6 +107,15 @@ onMounted(async () => {
 </script>
 
 <style scoped>
+.header {
+    font-size: 1.75rem;
+    margin: 2rem;
+}
+
+.grid-container {
+    width: min(92%, 1800px);
+    margin: 2rem auto;
+}
 .movie-grid {
     display: grid;
     grid-template-columns: repeat(auto-fill, calc(var(--movie-card-width) + 1rem));

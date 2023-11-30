@@ -1,7 +1,6 @@
 <template>
     <div class="page-container">
-        <h2 class="header">{{ genre }}</h2>
-        <MovieGrid :base-endpoint="`/api/movies/genre/${genreId}`" />
+        <MovieGrid :title="genre.toString()" :base-endpoint="`/api/movies/genre/${genreId}?`" />
     </div>
 </template>
 
@@ -31,7 +30,6 @@ if (genre) {
 
 <style scoped>
 .page-container {
-    width: min(93%, 1800px);
     margin: 2rem auto;
 }
 
