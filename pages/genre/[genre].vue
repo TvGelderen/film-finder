@@ -1,22 +1,6 @@
 <template>
     <div class="page-container">
         <h2 class="header">{{ genre }}</h2>
-        <!-- <div class="movie-grid" ref="gridRef">
-            <div class="movie-grid-item" v-for="movie in movies">
-                <MovieCard :movie="movie" />
-            </div>
-        </div>
-        <div class="pagination-container">
-            <div :class="`page-button ${page == 1 ? 'disabled' : ''}`" @click="previousPage">
-                Previous page
-            </div>
-            <div class="current-page">
-                Page: {{ page }}
-            </div>
-            <div class="page-button" @click="nextPage">
-                Next page
-            </div>
-        </div> -->
         <MovieGrid :base-endpoint="`/api/movies/genre/${genreId}`" />
     </div>
 </template>

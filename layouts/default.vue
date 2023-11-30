@@ -1,23 +1,30 @@
 <template>
-    <nav>
-        <div class="logo-container">
-            <NuxtLink class="logo link" to="/">
-                <img src="/img/logo.png" />
-            </NuxtLink>
-        </div>
-        <div class="nav-options">
-            <div class="genres">
-                <div class="genre-option" @click="toggleShowGenreContainer">
-                    Genre
-                </div>
-                <div class="genre-container" v-if="showGenreContainer">
-                    <NuxtLink class="genre link" :to="`/genre/${genre.name}`" v-for="genre in genres">
-                        {{  genre.name }}
-                    </NuxtLink>
+    <header>
+        <nav>
+            <div class="logo-container">
+                <NuxtLink class="logo link" to="/">
+                    <img src="/img/logo.png" />
+                </NuxtLink>
+            </div>
+            <div class="nav-options">
+                <div class="genres">
+                    <div class="genre-option" @click="toggleShowGenreContainer">
+                        Genre
+                    </div>
+                    <div class="genre-container" v-if="showGenreContainer">
+                        <NuxtLink class="genre link" :to="`/genre/${genre.name}`" v-for="genre in genres">
+                            {{  genre.name }}
+                        </NuxtLink>
+                    </div>
                 </div>
             </div>
+        </nav> 
+        <div class="search-container">
+            <form @submit="handleSearch">
+                <input class="search-input" placeholder="Search..." v-model="searchText" />
+            </form>
         </div>
-    </nav> 
+    </header>
     <main>
         <slot />
     </main>
@@ -39,6 +46,7 @@ if (data.value) {
 }
  
 const showGenreContainer = ref(false);
+const searchText = ref("");
 
 const toggleShowGenreContainer = () => {    
     showGenreContainer.value = !showGenreContainer.value;
@@ -61,16 +69,48 @@ const toggleShowGenreContainer = () => {
         document.addEventListener("click", handleOutsideClick);
     }
 }
+
+const handleSearch = async (event: Event) => {
+    event.preventDefault();
+
+    await navigateTo({
+        path: `/search`,
+        query: {
+            searchText: searchText.value
+        }
+    });
+}
 </script>
 
 <style scoped>
-nav {
+header {
     width: 100%;
     height: 4rem;
     display: flex;
+    justify-content: space-between;
     align-items: center;
     background-color: var(--background-color-secondary);
-    box-shadow: 0px 4px 12px black;
+}
+
+nav {
+    display: flex;
+    align-items: center;
+}
+
+.search-container {
+    margin-right: 1.25rem;
+}
+
+.search-input {
+    background-color: var(--background-color);
+    font-size: 1rem;
+    padding: 0.75rem;
+    border-radius: 50px;
+    border: none;
+}
+
+.search-input:focus {
+    outline: solid var(--theme-color-secondary) 2px;
 }
 
 main {
