@@ -130,6 +130,7 @@ main::-webkit-scrollbar-thumb {
 
 .link {
     text-decoration: none;
+    color: currentColor;
 }
 
 .logo {

@@ -121,7 +121,6 @@ onMounted(async () => {
     grid-template-columns: repeat(auto-fill, calc(var(--movie-card-width) + 1rem));
     gap: 0.5rem 0;
     justify-content: center;
-    overflow: auto;
 }
 
 .movie-grid-item {
