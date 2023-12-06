@@ -4,7 +4,8 @@ export default defineNuxtConfig({
     public: {
       MOVIE_DB_ACCESS_TOKEN: process.env.NUXT_MOVIE_DB_ACCESS_TOKEN,
       MOVIE_DB_BASE_URL: process.env.NUXT_MOVIE_DB_BASE_URL,
-      MOVIE_DB_IMG_URL_THUMBNAIL: process.env.NUXT_MOVIE_DB_IMG_URL_THUMBNAIL
+      MOVIE_DB_IMG_URL_THUMBNAIL: process.env.NUXT_MOVIE_DB_IMG_URL_THUMBNAIL,
+      MOVIE_DB_IMG_URL_BACKDROP: process.env.NUXT_MOVIE_DB_IMG_URL_BACKDROP
     }
   },
   modules: ['nuxt-icon'],
