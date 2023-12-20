@@ -1,11 +1,13 @@
 <template>
-    <div class="movie-carrousel-header" v-if="title">
-        {{ title }}
-    </div>
-    <div :class="carrouselClass">
-        <div class="movie-carrousel" ref="carrousel">
-            <div class="movie-card-container" v-for="movie in movies">
-                <MovieCard :movie="movie" />
+    <div class="movie-carrousel-wrapper">
+        <div class="movie-carrousel-header" v-if="title">
+            {{ title }}
+        </div>
+        <div :class="carrouselClass">
+            <div class="movie-carrousel" ref="carrousel">
+                <div class="movie-card-container" v-for="movie in movies">
+                    <MovieCard :movie="movie" />
+                </div>
             </div>
         </div>
     </div>
@@ -25,7 +27,7 @@ const props = defineProps({
 
 let movies: Movie[];
 
-if (props.apiEndpoint){
+if (props.apiEndpoint) {
     const { data } = await useFetch<MovieResponse>(props.apiEndpoint);
     
     if (data.value) {
@@ -95,6 +97,15 @@ const updateFadeAfterScroll = (carrousel: HTMLElement | null) => {
 </script>
 
 <style scoped>
+.movie-carrousel-wrapper {
+    position: relative;
+    background-image: var(--background-color);
+}
+
+.movie-carrousel-wrapper.gradient-background {
+    background-image: linear-gradient(to top, var(--background-color) 50%, transparent);
+}
+
 .movie-carrousel-header {
     margin-left: var(--movie-carrousel-x-margin);
     margin-bottom: 0.5rem;
@@ -103,29 +114,37 @@ const updateFadeAfterScroll = (carrousel: HTMLElement | null) => {
 
 .movie-carrousel-container {
     position: relative;
-    padding: 0 var(--movie-carrousel-x-margin);
 }
 
 .movie-carrousel-container::before,
 .movie-carrousel-container::after {
     content: '';
     height: 100%;
-    width: calc(var(--movie-carrousel-x-margin) * 2.5);
+    width: calc(var(--movie-carrousel-x-margin) * 5);
+    pointer-events: none;
     position: absolute;
     top: 0;
-    pointer-events: none;
     z-index: 1;
     opacity: 0;
+    transition: opacity 0.25s;
 }
 
 .movie-carrousel-container::before {
     left: 0;
-    background-image: linear-gradient(to right, var(--background-color) 40%, transparent);
+    background-image: linear-gradient(to right, var(--background-color) 5%, transparent);
 }
 
 .movie-carrousel-container::after {
     right: 0;
-    background-image: linear-gradient(to left, var(--background-color) 40%, transparent);
+    background-image: linear-gradient(to left, var(--background-color) 5%, transparent);
+}
+
+.gradient-background .movie-carrousel-container::before {
+    background-image: none;
+}
+
+.gradient-background .movie-carrousel-container::after {
+    background-image: none;
 }
 
 .movie-carrousel-container.fade-left::before {
@@ -147,11 +166,11 @@ const updateFadeAfterScroll = (carrousel: HTMLElement | null) => {
     display: none;
 }
 
-/* .movie-card-container:first-child {
+.movie-card-container:first-child {
     margin-left: var(--movie-carrousel-x-margin);
 }
 
 .movie-card-container:last-child {
     margin-right: var(--movie-carrousel-x-margin);
-} */
+}
 </style>

@@ -40,6 +40,6 @@ const posterUrl = computed(() => props.movie?.poster_path != null ?
 
 .hero-content {
     position: absolute;
-    bottom: 0;
+    bottom: 10%;
 }
 </style>
