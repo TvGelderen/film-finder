@@ -99,16 +99,17 @@ const updateFadeAfterScroll = (carrousel: HTMLElement | null) => {
 <style scoped>
 .movie-carrousel-wrapper {
     position: relative;
-    background-image: var(--background-color);
+    background-color: var(--background-color);
 }
 
 .movie-carrousel-wrapper.gradient-background {
+    background-color: transparent;
     background-image: linear-gradient(to top, var(--background-color) 50%, transparent);
 }
 
 .movie-carrousel-header {
-    margin-left: var(--movie-carrousel-x-margin);
-    margin-bottom: 0.5rem;
+    margin: 1rem 0;
+    margin-left: calc(var(--movie-carrousel-x-margin) / 2);
     font-size: 1.6rem;
 }
 
@@ -126,7 +127,7 @@ const updateFadeAfterScroll = (carrousel: HTMLElement | null) => {
     top: 0;
     z-index: 1;
     opacity: 0;
-    transition: opacity 0.25s;
+    transition: opacity 0.1s;
 }
 
 .movie-carrousel-container::before {
@@ -167,7 +168,7 @@ const updateFadeAfterScroll = (carrousel: HTMLElement | null) => {
 }
 
 .movie-card-container:first-child {
-    margin-left: var(--movie-carrousel-x-margin);
+    margin-left: calc(var(--movie-carrousel-x-margin) / 2);
 }
 
 .movie-card-container:last-child {

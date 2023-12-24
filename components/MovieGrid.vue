@@ -38,6 +38,13 @@ const props = defineProps({
     }
 })
 
+watch(() => props.baseEndpoint, async (newVal) => {
+    page.value = 1;
+    baseEndpoint.value = newVal;
+    await fetchPageData();
+});
+
+const baseEndpoint = ref(props.baseEndpoint);
 const page = ref(1);
 const gridRef = ref<HTMLElement | null>(null);
 const gridItemsPerRow = ref(0);
@@ -48,7 +55,7 @@ const itemsOnScreen = computed(() => gridItemsPerRow.value * props.numberOfRows)
 
 let fetchSize: number;
 
-const { data } = await useFetch<Movie[]>(`${props.baseEndpoint}page=${page.value}`);
+const { data } = await useFetch<Movie[]>(`${baseEndpoint.value}page=${page.value}`);
 
 if (data.value) {
     movies.value = data.value;
@@ -82,7 +89,7 @@ const fetchPageData = async () => {
 
         gridItemsPerRow.value = Math.floor(gridRef.value.clientWidth / gridItem.clientWidth);
 
-        const response = await $fetch(`${props.baseEndpoint}page=${page.value}&fetchSize=${fetchSize}&count=${itemsOnScreen.value}&start=${firstItemIndex.value}`) as Movie[];
+        const response = await $fetch(`${baseEndpoint.value}page=${page.value}&fetchSize=${fetchSize}&count=${itemsOnScreen.value}&start=${firstItemIndex.value}`) as Movie[];
 
         if (response) {
             movies.value = response;
@@ -103,7 +110,6 @@ onMounted(async () => {
         }
     })
 });
-
 </script>
 
 <style scoped>
@@ -116,6 +122,7 @@ onMounted(async () => {
     width: min(92%, 1800px);
     margin: 2rem auto;
 }
+
 .movie-grid {
     display: grid;
     grid-template-columns: repeat(auto-fill, calc(var(--movie-card-width) + 1rem));
@@ -131,18 +138,20 @@ onMounted(async () => {
 
 .pagination-container {
     display: flex;
-    justify-content: space-between;
+    justify-content: center;
     align-items: center;
+    gap: 18px;
     margin-top: 2rem;
 }
 
 .page-button {
     width: 8rem;
-    padding: 1rem 0;
+    padding: 0.75rem 0;
     background-color: var(--theme-color-secondary);
     cursor: pointer;
     text-align: center;
     user-select: none;
+    border-radius: 8px;
 }
 
 .page-button.disabled {

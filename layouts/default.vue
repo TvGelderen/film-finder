@@ -26,7 +26,9 @@
         </div>
     </header>
     <main>
-        <slot />
+        <div class="page-container">
+            <slot />
+        </div>
     </main>
 </template>
 

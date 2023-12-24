@@ -3,11 +3,11 @@
     --background-color: #121212;
     --background-color-secondary: #252525;
     --background-color-tertiary: #323232;
-    --theme-color: rgba(67, 23, 228, 0.774);
-    --theme-color-secondary: rgba(125, 89, 255, 0.774);
+    --theme-color: rgba(111, 161, 255, 1);
+    --theme-color-secondary: rgba(0, 67, 192, 0.774);
 
     /* SIZES */
     --movie-carrousel-x-margin: 60px;
-    --movie-card-width: 225px;
+    --movie-card-width: 185px;
     --movie-card-gap: 16px;
 }

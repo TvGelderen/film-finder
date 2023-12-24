@@ -1,7 +1,5 @@
 <template>
-    <div class="page-container">
-        <MovieGrid :title="genre.toString()" :base-endpoint="`/api/movies/genre/${genreId}?`" />
-    </div>
+    <MovieGrid :title="genre.toString()" :base-endpoint="`/api/movies/genre/${genreId}?`" />
 </template>
 
 <script setup lang="ts">
