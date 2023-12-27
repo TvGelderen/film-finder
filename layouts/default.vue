@@ -13,16 +13,30 @@
                     </div>
                     <div class="genre-container" v-if="showGenreContainer">
                         <NuxtLink class="genre link" :to="`/genre/${genre.name}`" v-for="genre in genres">
-                            {{  genre.name }}
+                            {{ genre.name }}
                         </NuxtLink>
                     </div>
                 </div>
             </div>
-        </nav> 
-        <div class="search-container">
-            <form @submit="handleSearch">
-                <input class="search-input" placeholder="Search..." v-model="searchText" />
-            </form>
+        </nav>
+        <div class="header-right">
+            <div class="search-container">
+                <form @submit="handleSearch">
+                    <input class="search-input" placeholder="Search..." v-model="searchText" />
+                </form>
+            </div>
+            <div class="user-container">
+                <Icon name="mdi:account" size="30" @click="toggleShowUserDropdown" />
+                <div class="user-dropdown" v-if="showUserDropdown">
+                    <div v-if="user">
+                        <p>Hello, {{ user.name }}</p>
+                        <button @click="logout">Logout</button>
+                    </div>
+                    <div v-else>
+                        <button @click="goToLogin">Login</button>
+                    </div>
+                </div>
+            </div>
         </div>
     </header>
     <main>
@@ -35,8 +49,11 @@
 <script setup lang="ts">
 import type { GenreResponse, Genre } from '~/types/movie-db/GenreTypes';
 
+const config = useRuntimeConfig();
+const user = useAuth();
+
 useHead({
-  title: 'FilmFinder',
+    title: 'FilmFinder',
 });
 
 let genres: Genre[];
@@ -46,27 +63,23 @@ const { data } = useFetch<GenreResponse>('/api/movies/genres');
 if (data.value) {
     genres = data.value.genres;
 }
- 
+
 const showGenreContainer = ref(false);
+const showUserDropdown = ref(false);
 const searchText = ref("");
 
-const toggleShowGenreContainer = () => {    
+const toggleShowGenreContainer = () => {
     showGenreContainer.value = !showGenreContainer.value;
-
     function handleOutsideClick(e: MouseEvent) {
         const target = e.target as HTMLElement;
-
         if (target.className == "genre-option" && showGenreContainer.value == true) {
             return;
         }
-
         if (target.className != "genre-container") {
             showGenreContainer.value = false;
-
             document.removeEventListener("click", handleOutsideClick);
         }
     }
-
     if (showGenreContainer.value) {
         document.addEventListener("click", handleOutsideClick);
     }
@@ -81,6 +94,44 @@ const handleSearch = async (event: Event) => {
             searchText: `${searchText.value}`
         }
     });
+}
+
+const toggleShowUserDropdown = () => {
+    showUserDropdown.value = !showUserDropdown.value;
+    function handleOutsideClick(e: MouseEvent) {
+        const target = e.target as HTMLElement;
+        if ((target.className == "user-container" ||
+            target.parentElement?.className == "user-container" ||
+            target.parentElement?.parentElement?.className == "user-container") && showUserDropdown.value == true) {
+            return;
+        }
+        if (target.className != "user-dropdown") {
+            showUserDropdown.value = false;
+            document.removeEventListener("click", handleOutsideClick);
+        }
+    }
+    if (showUserDropdown.value) {
+        document.addEventListener("click", handleOutsideClick);
+    }
+}
+
+const goToLogin = async () => {
+    showUserDropdown.value = false;
+    await navigateTo('/login');
+}
+
+const logout = async () => {
+    try {
+        await $fetch.raw(`${config.public.FILM_FINDER_API_HOST}/auth/logout`, {
+            method: 'POST',
+            headers: useRequestHeaders(['cookies']),
+            credentials: 'include'
+        });
+
+        user.value = null;
+    } catch (err: any) {
+        console.log(err.data);
+    }  
 }
 </script>
 
@@ -99,6 +150,12 @@ nav {
     align-items: center;
 }
 
+.header-right {
+    display: flex;
+    align-items: center;
+    margin-right: 1.25rem;
+}
+
 .search-container {
     margin-right: 1.25rem;
 }
@@ -113,6 +170,31 @@ nav {
 
 .search-input:focus {
     outline: solid var(--theme-color-secondary) 2px;
+}
+
+.user-container {
+    position: relative;
+}
+
+.user-container svg {
+    cursor: pointer;
+}
+
+.user-dropdown {
+    position: absolute;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    top: 2.5rem;
+    right: 0;
+    width: 150px;
+    height: 85px;
+    border-radius: 8px;
+    background-color: var(--background-color-tertiary);
+}
+
+.user-dropdown p {
+    margin-bottom: 0.75rem;
 }
 
 main {
@@ -184,5 +266,18 @@ main::-webkit-scrollbar-thumb {
 
 .genre:hover {
     color: var(--theme-color-secondary);
+}
+
+button {
+    padding: 0.5rem 1.5rem;
+    font-size: 1rem;
+    background-color: var(--background-color-secondary);
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+button:hover {
+    background-color: var(--theme-color);
 }
 </style>
