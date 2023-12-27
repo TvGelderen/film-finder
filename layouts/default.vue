@@ -48,9 +48,11 @@
 
 <script setup lang="ts">
 import type { GenreResponse, Genre } from '~/types/movie-db/GenreTypes';
+import type { UserInfoResponse } from '~/types/auth/AuthTypes';
 
 const config = useRuntimeConfig();
 const user = useAuth();
+const savedMovies = useSavedMovies();
 
 useHead({
     title: 'FilmFinder',
@@ -131,8 +133,37 @@ const logout = async () => {
         user.value = null;
     } catch (err: any) {
         console.log(err.data);
-    }  
+    }
 }
+
+onMounted(async () => {
+    try {
+        let response = await $fetch.raw(`${config.public.FILM_FINDER_API_HOST}/users`, {
+            method: 'GET',
+            headers: useRequestHeaders(['cookies']),
+            credentials: 'include'
+        });
+
+        const userData: UserInfoResponse = response._data as UserInfoResponse;
+
+        user.value = {
+            name: userData.name,
+            email: userData.email
+        }
+
+        if (savedMovies.value.length == 0) {
+            response = await $fetch.raw(`${config.public.FILM_FINDER_API_HOST}/movies`, {
+                method: 'GET',
+                headers: useRequestHeaders(['cookies']),
+                credentials: 'include'
+            });
+
+            savedMovies.value = response._data as number[];
+        }
+    } catch (err: any) {
+        console.log(err.data.error);
+    }
+});
 </script>
 
 <style scoped>

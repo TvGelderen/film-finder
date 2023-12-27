@@ -9,7 +9,7 @@
             <div class="movie-title">
                 {{ props.movie?.title }}
             </div>
-            <div class="like-container" @click="likeMovie">
+            <div class="like-container" @click="saveMovie">
                 <Icon :name="likeIcon" /> 
             </div>
             <div class="movie-rating">
@@ -26,19 +26,25 @@ import type { Movie } from '~/types/movie-db/MovieTypes';
 const props = defineProps({
     movie: {
         type: Object as PropType<Movie>
+    },
+    saved: {
+        type: Boolean
     }
 })
 
-let liked = ref(false);
+const emit = defineEmits(['movie-saved']);
+
+const saved = ref(props.saved);
 
 const config = useRuntimeConfig();
 const posterUrl = computed(() => props.movie?.poster_path != null ?
     `${config.public.MOVIE_DB_IMG_URL_THUMBNAIL}${props.movie?.poster_path}` :
     'https://storage.googleapis.com/proudcity/mebanenc/uploads/2021/03/placeholder-image.png');
-const likeIcon = computed(() => liked.value ? 'mdi:heart' : 'mdi:heart-outline');
+const likeIcon = computed(() => saved.value ? 'mdi:heart' : 'mdi:heart-outline');
 
-const likeMovie = () => {
-    liked.value = !liked.value;
+const saveMovie = async () => {
+    saved.value = !saved.value;
+    emit('movie-saved', props.movie?.id);
 }
 </script>
 

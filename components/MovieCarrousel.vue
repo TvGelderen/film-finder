@@ -5,8 +5,11 @@
         </div>
         <div :class="carrouselClass">
             <div class="movie-carrousel" ref="carrousel">
+                <div v-if="loading">
+                    <div class="movie-card-skeleton" />
+                </div>
                 <div class="movie-card-container" v-for="movie in movies">
-                    <MovieCard :movie="movie" />
+                    <MovieCard :movie="movie" :saved="savedMovies.indexOf(movie?.id) !== -1" @movie-saved="handleMovieSaved" />
                 </div>
             </div>
         </div>
@@ -25,27 +28,48 @@ const props = defineProps({
     }
 });
 
-let movies: Movie[];
+const config = useRuntimeConfig();
+const savedMovies = useSavedMovies();
 
-if (props.apiEndpoint) {
-    const { data } = await useFetch<MovieResponse>(props.apiEndpoint);
-    
-    if (data.value) {
-        movies = data.value.results;
-    }
-}
-
+const loading = ref(true);
 const showFadeLeft = ref(false);
 const showFadeRight = ref(true);
+const movies: Ref<Movie[]> = ref([]);
 const carrousel: Ref<HTMLElement | null> = ref(null);
 
 const carrouselClass = computed(() => `movie-carrousel-container ${showFadeLeft.value ? 'fade-left' : ''} ${showFadeRight.value ? 'fade-right' : ''}`);
 
-onMounted(() => {
+const handleMovieSaved = async (id: number) => {
+    const wasSaved = savedMovies.value.includes(id);
+
+    try {
+        await $fetch(`${config.public.FILM_FINDER_API_HOST}/movies`, {
+            method: wasSaved ? 'DELETE' : 'POST',
+            headers: useRequestHeaders(['cookies']),
+            credentials: 'include',
+            body: {
+                movieId: id
+            }
+        });
+
+        if (wasSaved) {
+            const idx = savedMovies.value.indexOf(id);
+            if (idx !== -1) {
+                savedMovies.value.splice(idx, 1);
+            }
+        } else {
+            savedMovies.value.push(id);
+        }
+    } catch (err: any) {
+        console.error(err.data);
+    }
+}
+
+onMounted(async () => {
     if (carrousel.value == null) {
         return;
     }
-    
+
     let isDown = ref(false);
     let prevX = ref(0);
 
@@ -54,6 +78,16 @@ onMounted(() => {
     carrousel.value.addEventListener("mouseleave", () => mouseLeave(isDown));
     carrousel.value.addEventListener("mousemove", (e) => mouseMove(e, isDown, prevX, carrousel.value));
     carrousel.value.addEventListener("scroll", () => updateFadeAfterScroll(carrousel.value));
+
+    if (props.apiEndpoint) {
+        const response = await $fetch<MovieResponse>(props.apiEndpoint);
+
+        if (response.results) {
+            movies.value = response.results;
+            loading.value = false;
+        }
+    }
+
 });
 
 const mouseIsDown = (e: MouseEvent, isDown: Ref<Boolean>, prevX: Ref<number>) => {
@@ -173,5 +207,24 @@ const updateFadeAfterScroll = (carrousel: HTMLElement | null) => {
 
 .movie-card-container:last-child {
     margin-right: var(--movie-carrousel-x-margin);
+}
+
+.movie-card-skeleton {
+    width: var(--movie-card-width);
+    aspect-ratio: 300/450;
+    border-radius: 12px;
+    animation: pulse 1s infinite;
+}
+
+@keyframes pulse {
+    0% {
+        background-color: var(--background-color-tertiary);
+    }
+    50% {
+        background-color: var(--background-color-secondary);
+    }
+    100% {
+        background-color: var(--background-color-tertiary);
+    }
 }
 </style>
