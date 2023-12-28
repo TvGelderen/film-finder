@@ -4,12 +4,15 @@
             {{ title }}
         </div>
         <div class="movie-grid" ref="gridRef">
+            <div class="movie-grid-item" v-for="movie in movies">
+                <MovieCard :movie="movie" :saved="savedMovies.indexOf(movie?.id) !== -1" @movie-saved="handleMovieSaved" />
+            </div>
             <div class="movie-grid-item" v-if="loading" v-for="_ in gridItemsPerRow * numberOfRows">
                 <div class="skeleton" />
             </div>
-            <div class="movie-grid-item" v-else v-for="movie in movies">
-                <MovieCard :movie="movie" :saved="savedMovies.indexOf(movie?.id) !== -1" @movie-saved="handleMovieSaved" />
-            </div>
+            <!-- <div class="movie-grid-item" v-for="_ in 10"> -->
+            <!--     <div class="skeleton" /> -->
+            <!-- </div> -->
         </div>
         <div class="pagination-container">
             <div :class="`page-button ${page == 1 ? 'disabled' : ''}`" @click="previousPage">
@@ -54,7 +57,7 @@ const loading = ref(true);
 const baseEndpoint = ref(props.baseEndpoint);
 const page = ref(1);
 const gridRef = ref<HTMLElement | null>(null);
-const gridItemsPerRow = ref(5);
+const gridItemsPerRow = ref(0);
 const firstItemIndex = ref(0);
 const movies = ref<Movie[] | null>(null);
 

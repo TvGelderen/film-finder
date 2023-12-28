@@ -245,6 +245,7 @@ nav {
     height: 85px;
     border-radius: 8px;
     background-color: var(--background-color-tertiary);
+    z-index: 2;
 }
 
 .user-dropdown p {

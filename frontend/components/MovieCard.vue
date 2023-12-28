@@ -1,19 +1,15 @@
 <template>
     <div class="movie-card">
-        <img 
-            class="movie-poster"
-            :src="posterUrl"
-            :alt="movie?.title"
-        />
+        <img class="movie-poster" :src="posterUrl" :alt="movie?.title" />
         <div class="movie-info-container">
             <div class="movie-title">
                 {{ props.movie?.title }}
             </div>
             <div class="like-container" @click="saveMovie">
-                <Icon :name="likeIcon" /> 
+                <Icon :name="likeIcon" />
             </div>
             <div class="movie-rating">
-                <Icon name="tdesign:star-filled" /> 
+                <Icon name="tdesign:star-filled" />
                 <span class="rating">{{ props.movie?.vote_average.toFixed(1) }}</span>
             </div>
         </div>
@@ -68,7 +64,7 @@ img {
     height: 100%;
     font-style: italic;
     border-radius: 12px;
-    margin-bottom: -4px;
+    margin-bottom: -5px;
 }
 
 .movie-info-container {
