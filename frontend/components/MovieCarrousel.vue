@@ -5,7 +5,7 @@
         </div>
         <div :class="carrouselClass">
             <div class="movie-carrousel" v-if="loading">
-                <div class="movie-card-skeleton" v-for="_ in 10" />
+                <div class="movie-card-skeleton" v-for="_ in 25" />
             </div>
             <div class="movie-carrousel" ref="carrousel" v-else>
                 <div class="movie-card-container" v-for="movie in movies">
@@ -192,9 +192,10 @@ const updateFadeAfterScroll = (carrousel: HTMLElement | null) => {
 }
 
 .movie-carrousel {
+    width: 100%;
     display: flex;
     gap: var(--movie-card-gap);
-    overflow-x: auto;
+    overflow-x: scroll;
     scrollbar-width: none;
 }
 
@@ -202,16 +203,18 @@ const updateFadeAfterScroll = (carrousel: HTMLElement | null) => {
     display: none;
 }
 
-.movie-card-container:first-child {
+.movie-card-container:first-child,
+.movie-card-skeleton:first-child {
     margin-left: calc(var(--movie-carrousel-x-margin) / 2);
 }
 
-.movie-card-container:last-child {
+.movie-card-container:last-child,
+.movie-card-skeleton:last-child {
     margin-right: var(--movie-carrousel-x-margin);
 }
 
 .movie-card-skeleton {
-    width: var(--movie-card-width);
+    flex: 0 0 var(--movie-card-width);
     aspect-ratio: 300/450;
     border-radius: 12px;
     animation: pulse 1s infinite;

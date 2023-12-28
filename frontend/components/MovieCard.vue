@@ -55,6 +55,8 @@ const saveMovie = async () => {
     aspect-ratio: 300/450;
     cursor: pointer;
     user-select: none;
+    border-radius: 12px;
+    animation: pulse 1s infinite;
 }
 
 .movie-card:hover .movie-info-container {
@@ -66,6 +68,7 @@ img {
     height: 100%;
     font-style: italic;
     border-radius: 12px;
+    margin-bottom: -4px;
 }
 
 .movie-info-container {
@@ -75,7 +78,6 @@ img {
     justify-content: center;
     align-items: center;
     inset: 0;
-    padding: 8px;
     border-radius: 12px;
     text-align: center;
     background-color: rgba(0, 0, 0, 0.75);
@@ -110,5 +112,17 @@ img {
 .movie-rating .rating {
     margin-left: 4px;
     font-size: .9rem;
+}
+
+@keyframes pulse {
+    0% {
+        background-color: var(--background-color-tertiary);
+    }
+    50% {
+        background-color: var(--background-color-secondary);
+    }
+    100% {
+        background-color: var(--background-color-tertiary);
+    }
 }
 </style>
