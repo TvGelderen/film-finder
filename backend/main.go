@@ -37,8 +37,6 @@ func main() {
         DB: database.New(connection),
     }
 
-    fmt.Println("Server starting on port: ", port)
-
     router := chi.NewRouter()
 
     router.Use(cors.Handler(cors.Options {
@@ -68,6 +66,8 @@ func main() {
         Handler: router,
         Addr: ":" + port,
     }
+
+    fmt.Println("Server starting on port: ", port)
 
     err = server.ListenAndServe()
     if err != nil {
