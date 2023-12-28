@@ -4,10 +4,10 @@
             {{ title }}
         </div>
         <div :class="carrouselClass">
-            <div class="movie-carrousel" ref="carrousel">
-                <div v-if="loading">
-                    <div class="movie-card-skeleton" />
-                </div>
+            <div class="movie-carrousel" v-if="loading">
+                <div class="movie-card-skeleton" v-for="_ in 10" />
+            </div>
+            <div class="movie-carrousel" ref="carrousel" v-else>
                 <div class="movie-card-container" v-for="movie in movies">
                     <MovieCard :movie="movie" :saved="savedMovies.indexOf(movie?.id) !== -1" @movie-saved="handleMovieSaved" />
                 </div>
@@ -65,7 +65,7 @@ const handleMovieSaved = async (id: number) => {
     }
 }
 
-onMounted(async () => {
+watch(() => carrousel.value, async () => {
     if (carrousel.value == null) {
         return;
     }
@@ -78,7 +78,9 @@ onMounted(async () => {
     carrousel.value.addEventListener("mouseleave", () => mouseLeave(isDown));
     carrousel.value.addEventListener("mousemove", (e) => mouseMove(e, isDown, prevX, carrousel.value));
     carrousel.value.addEventListener("scroll", () => updateFadeAfterScroll(carrousel.value));
+});
 
+onMounted(async () => {
     if (props.apiEndpoint) {
         const response = await $fetch<MovieResponse>(props.apiEndpoint);
 
@@ -87,7 +89,6 @@ onMounted(async () => {
             loading.value = false;
         }
     }
-
 });
 
 const mouseIsDown = (e: MouseEvent, isDown: Ref<Boolean>, prevX: Ref<number>) => {
