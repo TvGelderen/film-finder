@@ -7,8 +7,8 @@ import (
 	"strings"
 	"time"
 
-	"github.com/TvGelderen/film-finder-api/internal/auth"
-	"github.com/TvGelderen/film-finder-api/internal/database"
+	"github.com/TvGelderen/film-finder/backend/internal/auth"
+	"github.com/TvGelderen/film-finder/backend/internal/database"
 	"github.com/google/uuid"
 )
 

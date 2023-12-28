@@ -3,7 +3,7 @@ package handlers
 import (
     "time"
     "github.com/google/uuid"
-    "github.com/TvGelderen/film-finder-api/internal/database"
+    "github.com/TvGelderen/film-finder/backend/internal/database"
 )
 
 type ApiConfig struct {

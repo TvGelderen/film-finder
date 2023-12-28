@@ -6,13 +6,13 @@ export default defineNuxtConfig({
       MOVIE_DB_BASE_URL: process.env.NUXT_MOVIE_DB_BASE_URL,
       MOVIE_DB_IMG_URL_THUMBNAIL: process.env.NUXT_MOVIE_DB_IMG_URL_THUMBNAIL,
       MOVIE_DB_IMG_URL_BACKDROP: process.env.NUXT_MOVIE_DB_IMG_URL_BACKDROP,
+      MOVIE_DB_IMG_URL_ORIGINAL: process.env.NUXT_MOVIE_DB_IMG_URL_ORIGINAL,
       FILM_FINDER_API_HOST: process.env.NUXT_FILM_FINDER_API_HOST
     }
   },
   modules: ['nuxt-icon'],
   css: [
-    '@/assets/css/variables.css',
-    '@/assets/css/media.css',
+    '@/assets/css/app.css',
   ],
   devtools: { enabled: true }
 })

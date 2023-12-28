@@ -219,16 +219,4 @@ const updateFadeAfterScroll = (carrousel: HTMLElement | null) => {
     border-radius: 12px;
     animation: pulse 1s infinite;
 }
-
-@keyframes pulse {
-    0% {
-        background-color: var(--background-color-tertiary);
-    }
-    50% {
-        background-color: var(--background-color-secondary);
-    }
-    100% {
-        background-color: var(--background-color-tertiary);
-    }
-}
 </style>

@@ -113,16 +113,4 @@ img {
     margin-left: 4px;
     font-size: .9rem;
 }
-
-@keyframes pulse {
-    0% {
-        background-color: var(--background-color-tertiary);
-    }
-    50% {
-        background-color: var(--background-color-secondary);
-    }
-    100% {
-        background-color: var(--background-color-tertiary);
-    }
-}
 </style>

@@ -1,4 +1,4 @@
-module github.com/TvGelderen/film-finder-api
+module github.com/TvGelderen/film-finder/backend
 
 go 1.21.5
 

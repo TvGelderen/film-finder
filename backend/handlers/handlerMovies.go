@@ -5,7 +5,7 @@ import (
 	"fmt"
 	"net/http"
 
-	"github.com/TvGelderen/film-finder-api/internal/database"
+	"github.com/TvGelderen/film-finder/backend/internal/database"
 )
 
 func (apiCfg *ApiConfig) HandlerSaveMovie(w http.ResponseWriter, r *http.Request, user database.User) {

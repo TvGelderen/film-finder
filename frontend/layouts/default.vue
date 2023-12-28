@@ -1,39 +1,45 @@
 <template>
-    <header>
-        <nav>
-            <div class="logo-container">
-                <NuxtLink class="logo link" to="/">
-                    <img src="/img/logo.png" />
-                </NuxtLink>
-            </div>
-            <div class="nav-options">
-                <div class="genres">
-                    <div class="genre-option" @click="toggleShowGenreContainer">
-                        Genre
-                    </div>
-                    <div class="genre-container" v-if="showGenreContainer">
-                        <NuxtLink class="genre link" :to="`/genre/${genre.name}`" v-for="genre in genres">
-                            {{ genre.name }}
-                        </NuxtLink>
+    <header :data-open="navOpen">
+        <div class="header-bar">
+            <nav>
+                <div class="logo-container">
+                    <div class="logo link" @click="() => goTo('/')">
+                        <img src="/img/logo.png" />
                     </div>
                 </div>
-            </div>
-        </nav>
-        <div class="header-right">
-            <div class="search-container">
-                <form @submit="handleSearch">
-                    <input class="search-input" placeholder="Search..." v-model="searchText" />
-                </form>
-            </div>
-            <div class="user-container">
-                <Icon name="mdi:account" size="30" @click="toggleShowUserDropdown" />
-                <div class="user-dropdown" v-if="showUserDropdown">
-                    <div v-if="user">
-                        <p>Hello, {{ user.name }}</p>
-                        <button @click="logout">Logout</button>
+                <div class="nav-options">
+                    <div class="genres">
+                        <div id="genre-option" class="nav-option" @click="toggleShowGenreContainer">
+                            Genre
+                        </div>
+                        <div :class="`genre-container ${showGenreContainer ? '' : 'hidden'}`">
+                            <div class="genre link" @click="() => goTo(`/genre/${genre.name}`)" v-for="genre in genres">
+                                {{ genre.name }}
+                            </div>
+                        </div>
                     </div>
-                    <div v-else>
-                        <button @click="goToLogin">Login</button>
+                    <div class="nav-option">
+                        <div class="link" @click="() => goTo('/mylist')">My List</div>
+                    </div>
+                </div>
+                <Icon class="nav-icon" :name="navOpen ? 'mdi:window-close' : 'mdi:menu'" size="32" @click="toggleNav" />
+            </nav>
+            <div class="header-right">
+                <div class="search-container">
+                    <form @submit="handleSearch">
+                        <input class="search-input" placeholder="Search..." v-model="searchText" />
+                    </form>
+                </div>
+                <div class="user-container">
+                    <Icon name="mdi:account" size="30" @click="toggleShowUserDropdown" />
+                    <div class="user-dropdown" v-if="showUserDropdown">
+                        <div v-if="user">
+                            <p>Hello, {{ user.name }}</p>
+                            <button @click="logout">Logout</button>
+                        </div>
+                        <div v-else>
+                            <button @click="goToLogin">Login</button>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -69,12 +75,13 @@ if (data.value) {
 const showGenreContainer = ref(false);
 const showUserDropdown = ref(false);
 const searchText = ref("");
+const navOpen = ref(false);
 
 const toggleShowGenreContainer = () => {
     showGenreContainer.value = !showGenreContainer.value;
     function handleOutsideClick(e: MouseEvent) {
         const target = e.target as HTMLElement;
-        if (target.className == "genre-option" && showGenreContainer.value == true) {
+        if (target.id == "genre-option" && showGenreContainer.value == true) {
             return;
         }
         if (target.className != "genre-container") {
@@ -85,17 +92,6 @@ const toggleShowGenreContainer = () => {
     if (showGenreContainer.value) {
         document.addEventListener("click", handleOutsideClick);
     }
-}
-
-const handleSearch = async (event: Event) => {
-    event.preventDefault();
-
-    await navigateTo({
-        path: `/search`,
-        query: {
-            searchText: `${searchText.value}`
-        }
-    });
 }
 
 const toggleShowUserDropdown = () => {
@@ -115,6 +111,27 @@ const toggleShowUserDropdown = () => {
     if (showUserDropdown.value) {
         document.addEventListener("click", handleOutsideClick);
     }
+}
+
+const toggleNav = () => {
+    navOpen.value = !navOpen.value;
+}
+
+const goTo = async (url: string) => {
+    navOpen.value = false;
+    
+    await navigateTo(url);
+}
+
+const handleSearch = async (event: Event) => {
+    event.preventDefault();
+
+    await navigateTo({
+        path: `/search`,
+        query: {
+            searchText: `${searchText.value}`
+        }
+    });
 }
 
 const goToLogin = async () => {
@@ -170,10 +187,16 @@ onMounted(async () => {
 header {
     width: 100%;
     height: 4rem;
+    background-color: var(--background-color-secondary);
+}
+
+.header-bar {
+    width: min(100%, 1640px);
+    height: 100%;
     display: flex;
     justify-content: space-between;
     align-items: center;
-    background-color: var(--background-color-secondary);
+    margin: 0 auto;
 }
 
 nav {
@@ -261,25 +284,26 @@ main::-webkit-scrollbar-thumb {
 
 .nav-options {
     height: 100%;
-    margin-left: 4rem;
+    display: flex;
+    margin-left: 2rem;
+}
+
+.nav-option {
+    font-size: 1.25rem;
+    margin-left: 2rem;
 }
 
 .genres {
     position: relative;
     display: flex;
     align-items: center;
-    height: 100%;
-    padding: 0 0.75rem;
     cursor: pointer;
-}
-
-.genre-option {
-    font-size: 1.5rem;
 }
 
 .genre-container {
     position: absolute;
     top: 110%;
+    left: 2rem;
     display: grid;
     grid-template-columns: repeat(2, 10em);
     padding: 0.5rem 0;
@@ -287,6 +311,10 @@ main::-webkit-scrollbar-thumb {
     background-color: var(--background-color-tertiary);
     z-index: 1;
     cursor: default;
+}
+
+.genre-container.hidden {
+    display: none;
 }
 
 .genre {
@@ -310,5 +338,65 @@ button {
 
 button:hover {
     background-color: var(--theme-color);
+}
+
+.nav-icon {
+    display: none;
+}
+
+@media screen and (max-width: 750px) {
+    nav {
+        width: 100%;
+        justify-content: space-between;
+    }
+
+    .nav-icon {
+        display: block;
+        margin-right: 1rem;
+    }
+
+    .nav-options,
+    .header-right {
+        display: none;
+        overflow-x: hidden;
+        overflow-y: scroll;
+    }
+
+    .nav-option {
+        margin-left: 1rem;
+        margin-top: 1.5rem;
+        font-size: 1.75rem;
+    }
+
+    .genres {
+        display: block;
+    }
+
+    .genre-container {
+        position: relative;
+        display: flex;
+        flex-direction: column;
+        background-color: transparent;
+    }
+
+    .genre-container.hidden {
+        display: flex;
+    }
+
+    .genre-container .genre {
+        font-size: 1.25rem;
+    }
+
+    header[data-open="true"] nav .nav-options {
+        display: block;
+        position: absolute;
+        top: 4rem;
+        left: 0;
+        right: 0;
+        height: calc(100% - 4rem);
+        margin-left: 0;
+        background-color: var(--background-color-secondary);
+        z-index: 2;
+    }
 }
 </style>

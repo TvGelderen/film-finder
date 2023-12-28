@@ -9,8 +9,8 @@ import (
     "github.com/joho/godotenv"
     "github.com/go-chi/chi/v5"
     "github.com/go-chi/cors"
-    "github.com/TvGelderen/film-finder-api/internal/database"
-    "github.com/TvGelderen/film-finder-api/handlers"
+    "github.com/TvGelderen/film-finder/backend/internal/database"
+    "github.com/TvGelderen/film-finder/backend/handlers"
 
     _ "github.com/lib/pq"
 )

@@ -1,0 +1,78 @@
+:root {
+    /* COLORS */
+    --background-color: #121212;
+    --background-color-secondary: #181818;
+    --background-color-tertiary: #282828;
+    --theme-color: rgba(111, 161, 255, 1);
+    --theme-color-secondary: rgba(0, 67, 192, 0.774);
+
+    /* SIZES */
+    --movie-carrousel-x-margin: 60px;
+    --movie-card-width: 185px;
+    --movie-card-gap: 16px;
+}
+
+.page-container {
+    width: 75%;
+    margin: 0 auto;
+    padding: 24px;
+}
+
+.saved-list-container {
+    grid-template-columns: repeat(3, 1fr);
+}
+
+@media screen and (max-width: 1300px) {
+    :root {
+        --movie-carrousel-x-margin: 40px;
+        --movie-card-width: 160px;
+    }    
+
+    .page-container {
+        width: 85%;
+    }
+
+    .saved-list-container {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
+@media screen and (max-width: 900px) {
+    :root {
+        font-size: 14px;
+
+        --movie-carrousel-x-margin: 20px;
+        --movie-card-width: 125px;
+        --movie-card-gap: 12px;
+    }
+
+    .page-container {
+        width: 90%;
+    }
+}
+
+@media screen and (max-width: 600px) {
+    :root {
+        font-size: 12px;
+        
+        --movie-carrousel-x-margin: 10px;
+        --movie-card-width: 100px;
+        --movie-card-gap: 8px;
+    }
+
+    .saved-list-container {
+        grid-template-columns: repeat(1, 1fr);
+    }
+}
+
+@keyframes pulse {
+    0% {
+        background-color: var(--background-color-tertiary);
+    }
+    50% {
+        background-color: var(--background-color-secondary);
+    }
+    100% {
+        background-color: var(--background-color-tertiary);
+    }
+}
