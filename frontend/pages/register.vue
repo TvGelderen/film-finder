@@ -14,7 +14,6 @@
                 <label for="password">Password:</label>
                 <input type="password" id="password" v-model="password" required />
             </div>
-            <p class="success-text" v-if="success">{{ success }}</p>
             <p class="error-text" v-if="error">{{ error }}</p>
             <div>
                 <button type="submit">Register</button>
@@ -27,15 +26,13 @@
 const name = ref('');
 const email = ref('');
 const password = ref('');
-const success = ref('');
 const error = ref('');
 
 const handleRegister = async () => {
-    success.value = '';
     error.value = '';
 
     try {
-        const response = await $fetch("/api/film-finder/auth/register", {
+        await $fetch("/api/film-finder/auth/register", {
             method: 'POST',
             body: {
                 name: name.value,
@@ -44,7 +41,7 @@ const handleRegister = async () => {
             }
         }) as string;
 
-        success.value = response;
+        await navigateTo('/login');
     } catch (err: any) {
         error.value = `${err.data.message}`;
     }

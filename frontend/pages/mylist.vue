@@ -42,7 +42,7 @@ const updateMovies = async (arr: number[]) => {
 
 const removeMovie = async (id: number) => {
     try {
-        await $fetch(`${config.public.FILM_FINDER_API_HOST}/movies`, {
+        await $fetch('/api/film-finder/movies', {
             method: 'DELETE',
             headers: useRequestHeaders(['cookies']),
             credentials: 'include',

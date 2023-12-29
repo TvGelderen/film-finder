@@ -45,11 +45,11 @@ func (apiCfg *ApiConfig) HandlerRegister(w http.ResponseWriter, r *http.Request)
             respondWithError(w, 400, fmt.Sprintf("That email is already taken"))
             return
         }
-		respondWithError(w, 400, fmt.Sprintf("Unable to create user: %v", err))
+		respondWithError(w, 400, fmt.Sprintf("Unable to create account: %v", err))
 		return
 	}
 
-	respondWithJSON(w, 201, "User successfully created")
+	respondWithJSON(w, 201, "Account successfully created")
 }
 
 func (apiCfg *ApiConfig) HandlerLogin(w http.ResponseWriter, r *http.Request) {
