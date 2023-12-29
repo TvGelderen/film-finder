@@ -1,14 +1,11 @@
 export default defineEventHandler(async (event) => {
     const config = useRuntimeConfig();
-    const { email, password } = await readBody(event);
+    const body = await readBody(event);
 
     try {
         const response = await $fetch.raw(`${config.public.FILM_FINDER_API_HOST}/auth/login`, {
             method: 'POST',
-            body: {
-                "email": `${email._value}`,
-                "password": `${password._value}`
-            }
+            body: body
         });
 
         const cookies = response.headers.getSetCookie()

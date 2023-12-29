@@ -35,12 +35,12 @@ const handleRegister = async () => {
     error.value = '';
 
     try {
-        const response = await $fetch("/api/auth/register", {
+        const response = await $fetch("/api/film-finder/auth/register", {
             method: 'POST',
             body: {
-                name,
-                email,
-                password
+                name: name.value,
+                email: email.value,
+                password: password.value
             }
         }) as string;
 

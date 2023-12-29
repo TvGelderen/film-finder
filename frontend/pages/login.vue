@@ -14,7 +14,7 @@
             <div>
                 <button type="submit">Login</button>
                 <div>
-                    Don't have an account? <a href="/register">Register</a>
+                    Don't have an account? <NuxtLink to="/register">Register</NuxtLink>
                 </div>
             </div>
         </form>
@@ -38,8 +38,8 @@ const handleLogin = async () => {
         const loginResponse = await $fetch("/api/film-finder/auth/login", {
             method: 'POST',
             body: {
-                email,
-                password
+                email: email.value,
+                password: password.value
             }
         }) as LoginResponse;
 

@@ -147,6 +147,7 @@ const logout = async () => {
         });
 
         user.value = null;
+        savedMovies.value = [];
     } catch (err: any) {
         console.log(err.data);
     }
