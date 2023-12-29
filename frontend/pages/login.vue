@@ -49,17 +49,18 @@ const handleLogin = async () => {
             email: loginResponse.email
         }
 
-        const savedMoviesResponse = await $fetch.raw(`${config.public.FILM_FINDER_API_HOST}/movies`, {
-            method: 'GET',
-            headers: useRequestHeaders(['cookies']),
-            credentials: 'include'
-        });
+        console.log(user.value);
 
-        savedMovies.value = savedMoviesResponse._data as number[];
+        const savedMoviesResponse = await $fetch(`${config.public.FILM_FINDER_API_HOST}/movies`, {
+            method: 'GET',
+            headers: useRequestHeaders(['cookie'])
+        }) as number[];
+
+        savedMovies.value = savedMoviesResponse;
 
         await navigateTo("/");
     } catch (err: any) {
-        error.value = `${err.data.message}`;
+        error.value = `${err.data.error}`;
     }
 }
 </script>

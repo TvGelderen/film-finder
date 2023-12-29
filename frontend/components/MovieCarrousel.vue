@@ -9,7 +9,7 @@
             </div>
             <div class="movie-carrousel" ref="carrousel" v-else>
                 <div class="movie-card-container" v-for="movie in movies">
-                    <MovieCard :movie="movie" :saved="savedMovies.indexOf(movie?.id) !== -1" @movie-saved="handleMovieSaved" />
+                    <MovieCard :movie="movie" :saved="savedMovies?.indexOf(movie?.id) !== -1" @movie-saved="handleMovieSaved" />
                 </div>
             </div>
         </div>

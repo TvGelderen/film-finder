@@ -143,7 +143,7 @@ const logout = async () => {
     try {
         await $fetch.raw(`${config.public.FILM_FINDER_API_HOST}/auth/logout`, {
             method: 'POST',
-            headers: useRequestHeaders(['cookies']),
+            headers: useRequestHeaders(['cookie']),
             credentials: 'include'
         });
 
