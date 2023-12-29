@@ -25,7 +25,7 @@ func SetToken(w http.ResponseWriter, token string) {
         MaxAge: 36000,
         Path: "/",
         HttpOnly: true,
-        Secure: true,
+        Secure: false,
         SameSite: http.SameSiteNoneMode,
     }
 
@@ -39,7 +39,7 @@ func RemoveToken(w http.ResponseWriter) {
         MaxAge: 0,
         Path: "/",
         HttpOnly: true,
-        Secure: true,
+        Secure: false,
         SameSite: http.SameSiteNoneMode,
     }
 
