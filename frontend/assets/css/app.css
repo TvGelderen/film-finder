@@ -7,8 +7,8 @@
     --theme-color-secondary: rgba(0, 67, 192, 0.774);
 
     /* SIZES */
-    --movie-carrousel-x-margin: 60px;
-    --movie-card-width: 185px;
+    --movie-carrousel-x-margin: 30px;
+    --movie-card-width: 180px;
     --movie-card-gap: 16px;
 }
 
@@ -24,7 +24,6 @@
 
 @media screen and (max-width: 1500px) {
     :root {
-        --movie-carrousel-x-margin: 40px;
         --movie-card-width: 160px;
     }    
 

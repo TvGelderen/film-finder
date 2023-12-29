@@ -10,7 +10,7 @@
             />
             <div class="overlay">
                 <Icon name="mdi:window-close" class="close-icon" size="1.75rem" @click="() => removeMovie(movie.id)" />
-                <h2>{{ movie.title }}</h2>
+                <p>{{ movie.title }}</p>
             </div>
         </div>
     </div>
@@ -102,10 +102,17 @@ onMounted(async () => {
     align-items: center;
     position: absolute;
     inset: 0 0 0 0; 
+    padding: 0.5rem;
+    text-align: center;
     background-color: rgba(0, 0, 0, 0.75);
     border-radius: 12px;
     opacity: 0;
     transition: opacity 0.4s;
+}
+
+.overlay p {
+    font-size: 1.5rem;
+    font-weight: 600;
 }
 
 .saved-movie-container:hover .overlay {

@@ -56,7 +56,6 @@
 import type { GenreResponse, Genre } from '~/types/movie-db/GenreTypes';
 import type { UserInfoResponse } from '~/types/auth/AuthTypes';
 
-const config = useRuntimeConfig();
 const user = useAuth();
 const savedMovies = useSavedMovies();
 
@@ -141,9 +140,9 @@ const goToLogin = async () => {
 
 const logout = async () => {
     try {
-        await $fetch.raw(`${config.public.FILM_FINDER_API_HOST}/auth/logout`, {
+        await $fetch('/api/film-finder/auth/logout', {
             method: 'POST',
-            headers: useRequestHeaders(['cookie']),
+            headers: useRequestHeaders(['cookies']),
             credentials: 'include'
         });
 
@@ -155,13 +154,11 @@ const logout = async () => {
 
 onMounted(async () => {
     try {
-        let response = await $fetch.raw(`${config.public.FILM_FINDER_API_HOST}/users`, {
+        const userData = await $fetch('/api/film-finder/users', {
             method: 'GET',
             headers: useRequestHeaders(['cookies']),
             credentials: 'include'
-        });
-
-        const userData: UserInfoResponse = response._data as UserInfoResponse;
+        }) as UserInfoResponse;
 
         user.value = {
             name: userData.name,
@@ -169,16 +166,16 @@ onMounted(async () => {
         }
 
         if (savedMovies.value.length == 0) {
-            response = await $fetch.raw(`${config.public.FILM_FINDER_API_HOST}/movies`, {
+            const movieData = await $fetch('/api/film-finder/movies', {
                 method: 'GET',
                 headers: useRequestHeaders(['cookies']),
                 credentials: 'include'
-            });
+            }) as number[];
 
-            savedMovies.value = response._data as number[];
+            savedMovies.value = movieData;
         }
     } catch (err: any) {
-        console.log(err.data.error);
+        console.log(err.data);
     }
 });
 </script>
@@ -270,6 +267,7 @@ main::-webkit-scrollbar-thumb {
 .link {
     text-decoration: none;
     color: currentColor;
+    cursor: pointer;
 }
 
 .logo {

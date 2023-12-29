@@ -47,7 +47,6 @@ watch(() => props.baseEndpoint, async (newVal) => {
     await fetchPageData();
 });
 
-const config = useRuntimeConfig();
 const savedMovies = useSavedMovies();
 
 const loading = ref(true);
@@ -110,7 +109,7 @@ const handleMovieSaved = async (id: number) => {
     const wasSaved = savedMovies.value.includes(id);
 
     try {
-        await $fetch(`${config.public.FILM_FINDER_API_HOST}/movies`, {
+        await $fetch('/api/film-finder/movies', {
             method: wasSaved ? 'DELETE' : 'POST',
             headers: useRequestHeaders(['cookies']),
             credentials: 'include',
@@ -132,6 +131,9 @@ const handleMovieSaved = async (id: number) => {
     }
 }
 
+watch(() => savedMovies.value, async () => {
+    await fetchPageData(); 
+});
 
 onMounted(async () => {
     await fetchPageData();

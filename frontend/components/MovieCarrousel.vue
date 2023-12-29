@@ -28,7 +28,6 @@ const props = defineProps({
     }
 });
 
-const config = useRuntimeConfig();
 const savedMovies = useSavedMovies();
 
 const loading = ref(true);
@@ -43,7 +42,7 @@ const handleMovieSaved = async (id: number) => {
     const wasSaved = savedMovies.value.includes(id);
 
     try {
-        await $fetch(`${config.public.FILM_FINDER_API_HOST}/movies`, {
+        await $fetch('/api/film-finder/movies', {
             method: wasSaved ? 'DELETE' : 'POST',
             headers: useRequestHeaders(['cookies']),
             credentials: 'include',
@@ -80,7 +79,20 @@ watch(() => carrousel.value, async () => {
     carrousel.value.addEventListener("scroll", () => updateFadeAfterScroll(carrousel.value));
 });
 
+watch(() => savedMovies.value, async () => {
+    loading.value = true;
+    if (props.apiEndpoint) {
+        const response = await $fetch<MovieResponse>(props.apiEndpoint);
+
+        if (response.results) {
+            movies.value = response.results;
+            loading.value = false;
+        }
+    }
+});
+
 onMounted(async () => {
+    loading.value = true;
     if (props.apiEndpoint) {
         const response = await $fetch<MovieResponse>(props.apiEndpoint);
 

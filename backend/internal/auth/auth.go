@@ -5,6 +5,7 @@ import (
 	"log"
 	"net/http"
 	"os"
+	"strings"
 
 	"github.com/golang-jwt/jwt/v5"
 	"github.com/google/uuid"
@@ -25,8 +26,6 @@ func SetToken(w http.ResponseWriter, token string) {
         MaxAge: 36000,
         Path: "/",
         HttpOnly: true,
-        Secure: false,
-        SameSite: http.SameSiteNoneMode,
     }
 
     http.SetCookie(w, &cookie)
@@ -39,8 +38,6 @@ func RemoveToken(w http.ResponseWriter) {
         MaxAge: 0,
         Path: "/",
         HttpOnly: true,
-        Secure: false,
-        SameSite: http.SameSiteNoneMode,
     }
 
     http.SetCookie(w, &cookie)
@@ -50,12 +47,26 @@ func GetToken(r *http.Request) (string, error) {
     cookie, err := r.Cookie("AccessToken")
     if err != nil {
         if errors.Is(err, http.ErrNoCookie) {
-            return "", errors.New("cookie not found")
+            return GetTokenFromHeader(r.Header)
         }
         return "", err
     }
 
     return cookie.Value, nil
+}
+
+func GetTokenFromHeader(header http.Header) (string, error) {
+    val := header.Get("Authorization");
+    if val == "" {
+        return "", errors.New("no authentication info found")
+    }
+
+    token := strings.Split(val, " ");
+    if len(token) != 2 || token[0] != "Bearer" {
+        return "", errors.New("malformed authentication info")
+    }
+
+    return token[1], nil;
 }
 
 func HashPassword(password string) ([]byte, error) {

@@ -11,7 +11,7 @@ type authHandler func(http.ResponseWriter, *http.Request, database.User)
 
 func (apiCfg *ApiConfig) MiddlewareAuth(handler authHandler) http.HandlerFunc {
     return func(w http.ResponseWriter, r *http.Request) {
-        tokenString, err := auth.GetToken(r)
+        tokenString, err := auth.GetTokenFromHeader(r.Header)
         if err != nil {
             respondWithError(w, 403, fmt.Sprintf("Auth error: %v", err))
             return

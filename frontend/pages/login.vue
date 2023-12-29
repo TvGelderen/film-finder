@@ -28,7 +28,6 @@ const email = ref('');
 const password = ref('');
 const error = ref('');
 
-const config = useRuntimeConfig();
 const user = useAuth();
 const savedMovies = useSavedMovies();
 
@@ -36,7 +35,7 @@ const handleLogin = async () => {
     error.value = '';
 
     try {
-        const loginResponse = await $fetch("/api/auth/login", {
+        const loginResponse = await $fetch("/api/film-finder/auth/login", {
             method: 'POST',
             body: {
                 email,
@@ -49,11 +48,10 @@ const handleLogin = async () => {
             email: loginResponse.email
         }
 
-        console.log(user.value);
-
-        const savedMoviesResponse = await $fetch(`${config.public.FILM_FINDER_API_HOST}/movies`, {
+        const savedMoviesResponse = await $fetch('/api/film-finder/movies', {
             method: 'GET',
-            headers: useRequestHeaders(['cookie'])
+            headers: useRequestHeaders(['cookies']),
+            credentials: 'include'
         }) as number[];
 
         savedMovies.value = savedMoviesResponse;
