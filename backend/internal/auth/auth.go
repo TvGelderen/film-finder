@@ -114,7 +114,7 @@ func GetIdFromJWT(token string) (uuid.UUID, error) {
 func GetHMACKey() string {
     godotenv.Load(".env")
 
-    key := os.Getenv("HMAC_KEY")
+    key := os.Getenv("FILM_FINDER_HMAC_KEY")
     if key == "" {
         log.Fatal("HMAC Secret key is missing")
     }

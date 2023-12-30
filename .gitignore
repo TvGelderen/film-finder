@@ -29,7 +29,7 @@ logs
 *.dll
 *.so
 *.dylib
-film-finder-api
+backend
 
 # Test binary, built with `go test -c`
 *.test

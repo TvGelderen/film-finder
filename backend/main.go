@@ -18,12 +18,12 @@ import (
 func main() {
     godotenv.Load(".env")
 
-    port := os.Getenv("PORT")
+    port := os.Getenv("FILM_FINDER_PORT")
     if port == "" {
         log.Fatal("PORT is missing")
     }
 
-    dbConnectionString := os.Getenv("DB_CONNECTION_STRING")
+    dbConnectionString := os.Getenv("FILM_FINDER_DB_CONNECTION_STRING")
     if dbConnectionString == "" {
         log.Fatal("Database connection string is missing")
     }
@@ -48,19 +48,21 @@ func main() {
         MaxAge: 300,
     }))
 
-    router.Get("/health", handlers.HandlerSuccess)
+    base := "/film-finder"
 
-    router.Get("/users", apiCfg.MiddlewareAuth(apiCfg.HandlerGetUser))
+    router.Get(base + "/health", handlers.HandlerSuccess)
+
+    router.Get(base + "/users", apiCfg.MiddlewareAuth(apiCfg.HandlerGetUser))
 
     // Auth
-    router.Post("/auth/register", apiCfg.HandlerRegister)
-    router.Post("/auth/login", apiCfg.HandlerLogin)
-    router.Post("/auth/logout", apiCfg.MiddlewareAuth(apiCfg.HandlerLogout))
+    router.Post(base + "/auth/register", apiCfg.HandlerRegister)
+    router.Post(base + "/auth/login", apiCfg.HandlerLogin)
+    router.Post(base + "/auth/logout", apiCfg.MiddlewareAuth(apiCfg.HandlerLogout))
 
     // Save movies
-    router.Get("/movies", apiCfg.MiddlewareAuth(apiCfg.HandlerGetSavedMovies))
-    router.Post("/movies", apiCfg.MiddlewareAuth(apiCfg.HandlerSaveMovie))
-    router.Delete("/movies", apiCfg.MiddlewareAuth(apiCfg.HandlerRemoveMovie))
+    router.Get(base + "/movies", apiCfg.MiddlewareAuth(apiCfg.HandlerGetSavedMovies))
+    router.Post(base + "/movies", apiCfg.MiddlewareAuth(apiCfg.HandlerSaveMovie))
+    router.Delete(base + "/movies", apiCfg.MiddlewareAuth(apiCfg.HandlerRemoveMovie))
 
     server := &http.Server {
         Handler: router,
