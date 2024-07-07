@@ -20,7 +20,8 @@ func main() {
 
     port := os.Getenv("FILM_FINDER_PORT")
     if port == "" {
-        log.Fatal("PORT is missing")
+        port = "8080"
+        fmt.Print("PORT is missing, defaulting to 8080\n")
     }
 
     dbConnectionString := os.Getenv("FILM_FINDER_DB_CONNECTION_STRING")

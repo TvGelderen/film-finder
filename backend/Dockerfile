@@ -6,7 +6,7 @@ RUN go get
 RUN go build -o main
 
 # Run
-FROM debian:12.4
+FROM debian:buster-slim
 WORKDIR /app
 COPY --from=builder /app/main .
 COPY .env .
