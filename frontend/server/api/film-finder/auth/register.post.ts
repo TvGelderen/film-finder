@@ -3,15 +3,18 @@ export default defineEventHandler(async (event) => {
     const body = await readBody(event);
 
     try {
-        const response = await $fetch.raw(`${config.public.FILM_FINDER_API_HOST}/auth/register`, {
-            method: 'POST',
-            body: body
-        });
+        const response = await $fetch.raw(
+            `${config.public.FILM_FINDER_API_HOST}/auth/register`,
+            {
+                method: "POST",
+                body: body,
+            },
+        );
 
         const cookies = response.headers.getSetCookie();
 
         for (const cookie of cookies) {
-            appendHeader(event, 'set-cookie', cookie);
+            appendHeader(event, "set-cookie", cookie);
         }
 
         return response._data;

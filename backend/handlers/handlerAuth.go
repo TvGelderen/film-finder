@@ -41,6 +41,7 @@ func (apiCfg *ApiConfig) HandlerRegister(w http.ResponseWriter, r *http.Request)
 		UpdatedAt:    time.Now().UTC(),
 	})
 	if err != nil {
+        fmt.Println(err.Error())
         if strings.Contains(err.Error(), "users_email_key") {
             respondWithError(w, 400, fmt.Sprintf("That email is already taken"))
             return
